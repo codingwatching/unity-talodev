@@ -28,7 +28,8 @@ namespace TaloGameServices
                 new HttpHeader("Content-Type", "application/json"),
                 new HttpHeader("Accept", "application/json"),
                 new HttpHeader("X-Talo-Dev-Build", Debug.isDebugBuild ? "1" : "0"),
-                new HttpHeader("X-Talo-Include-Dev-Data", Debug.isDebugBuild ? "1" : "0")
+                new HttpHeader("X-Talo-Include-Dev-Data", Debug.isDebugBuild ? "1" : "0"),
+                new HttpHeader("X-Talo-Client", "unity")
             };
 
             if (Talo.CurrentAlias != null)
