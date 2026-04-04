@@ -20,7 +20,7 @@ namespace TaloGameServices
 
         public static string SanitiseJson(string json)
         {
-            string match = "\"key\":\"(\\w+)\",\"value\":\"\"";
+            string match = "\"key\":\"([^\"]+)\",\"value\":\"\"";
             string replacement = "\"key\":\"$1\",\"value\":null";
             return Regex.Replace(json, match, replacement);
         }

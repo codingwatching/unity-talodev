@@ -312,6 +312,12 @@ namespace TaloGameServices
             return res;
         }
 
+        public async Task<ChannelStorageProp[]> GetStoragePropArray(int channelId, string propKey, bool bustCache = false)
+        {
+            var arrayKey = propKey.EndsWith("[]") ? propKey : $"{propKey}[]";
+            return await ListStorageProps(channelId, new[] { arrayKey }, bustCache);
+        }
+
         public async Task<ChannelStorageProp> GetStorageProp(int channelId, string propKey, bool bustCache = false)
         {
             Talo.IdentityCheck();
@@ -330,7 +336,7 @@ namespace TaloGameServices
                 return null;
             }
 
-            _storageManager.UpsertProp(channelId, res.prop);
+            _storageManager.UpsertProp(channelId, res.prop, true);
             return res.prop;
         }
 
@@ -339,7 +345,7 @@ namespace TaloGameServices
             Talo.IdentityCheck();
 
             var props = propTuples.Select((propTuple) => new Prop(propTuple)).ToArray();
-            var content = JsonUtility.ToJson(new ChannelStoragePropsSetRequest { props = props });
+            var content = Prop.SanitiseJson(JsonUtility.ToJson(new ChannelStoragePropsSetRequest { props = props }));
 
             var uri = new Uri($"{baseUrl}/{channelId}/storage");
             var json = await Call(uri, "PUT", content);
@@ -370,10 +376,7 @@ namespace TaloGameServices
             var res = JsonUtility.FromJson<ChannelStoragePropsListResponse>(json);
             if (res.props != null)
             {
-                foreach (var prop in res.props)
-                {
-                    _storageManager.UpsertProp(channelId, prop);
-                }
+                _storageManager.UpsertManyProps(channelId, res.props);
                 return res.props;
             }
 
