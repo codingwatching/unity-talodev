@@ -5,6 +5,10 @@ namespace TaloGameServices
     [System.Serializable]
     public class Prop
     {
+        public static string ToArrayKey(string key) {
+            return key.EndsWith("[]") ? key : $"{key}[]";
+        }
+
         public string key, value;
 
         public Prop((string, string) propTuple)

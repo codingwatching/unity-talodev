@@ -314,7 +314,7 @@ namespace TaloGameServices
 
         public async Task<ChannelStorageProp[]> GetStoragePropArray(int channelId, string propKey, bool bustCache = false)
         {
-            var arrayKey = propKey.EndsWith("[]") ? propKey : $"{propKey}[]";
+            var arrayKey = Prop.ToArrayKey(propKey);
             return await ListStorageProps(channelId, new[] { arrayKey }, bustCache);
         }
 
@@ -338,6 +338,20 @@ namespace TaloGameServices
 
             _storageManager.UpsertProp(channelId, res.prop, true);
             return res.prop;
+        }
+
+        public async Task SetStoragePropArray(int channelId, string propKey, string[] values)
+        {
+            var arrayKey = Prop.ToArrayKey(propKey);
+
+            if (values.Length == 0)
+            {
+                await SetStorageProps(channelId, (arrayKey, null));
+                return;
+            }
+
+            var tuples = values.Select((v) => (arrayKey, v)).ToArray();
+            await SetStorageProps(channelId, tuples);
         }
 
         public async Task SetStorageProps(int channelId, params (string, string)[] propTuples)
