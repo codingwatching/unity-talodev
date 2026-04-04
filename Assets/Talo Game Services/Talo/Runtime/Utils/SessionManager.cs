@@ -74,7 +74,14 @@ namespace TaloGameServices
 
             if (!string.IsNullOrEmpty(GetRefreshToken()))
             {
-                await Talo.PlayerAuth.Refresh();
+                try
+                {
+                    await Talo.PlayerAuth.Refresh();
+                }
+                catch
+                {
+                    return false;
+                }
                 return true;
             }
 
