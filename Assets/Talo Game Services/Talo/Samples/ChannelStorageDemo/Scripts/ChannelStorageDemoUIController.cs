@@ -167,8 +167,7 @@ namespace TaloGameServices.Sample.ChannelStorageDemo
                     .Select((s) => s.Trim())
                     .Where((s) => !string.IsNullOrEmpty(s))
                     .ToArray();
-                var tuples = items.Select((v) => (key, v)).ToArray();
-                await Talo.Channels.SetStorageProps(demoChannel.id, tuples);
+                await Talo.Channels.SetStoragePropArray(demoChannel.id, key, items);
             }
             else
             {
