@@ -115,21 +115,21 @@ namespace TaloGameServices
         }
 
         public async Task<Player> IdentifyGameCenter(
-            string publicKeyURL,
+            string publicKeyUrl,
             byte[] signature,
             byte[] salt,
             ulong timestamp,
-            string playerID
+            string playerId
         )
         {
             var payload = new PlayersGameCenterIdentifier
             {
-                publicKeyURL = publicKeyURL,
+                publicKeyUrl = publicKeyUrl,
                 signature = Convert.ToBase64String(signature),
                 salt = Convert.ToBase64String(salt),
                 timestamp = timestamp,
-                playerID = playerID,
-                bundleID = Application.identifier
+                playerId = playerId,
+                bundleId = Application.identifier
             };
 
             var identifier = Uri.EscapeDataString(JsonUtility.ToJson(payload));
