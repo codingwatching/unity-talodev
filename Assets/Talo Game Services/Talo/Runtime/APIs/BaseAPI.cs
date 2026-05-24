@@ -130,7 +130,7 @@ namespace TaloGameServices
 
                     if (string.IsNullOrEmpty(errorCode))
                     {
-                        throw new RequestException(www.responseCode, new Exception(message));
+                        throw new RequestException(www.responseCode, new Exception(message), www.downloadHandler.text);
                     }
                     else
                     {
