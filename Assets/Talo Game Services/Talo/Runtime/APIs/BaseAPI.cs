@@ -139,7 +139,7 @@ namespace TaloGameServices
                     }
                     else
                     {
-                        if (errorCode == "INVALID_SESSION" && Talo.CurrentAlias != null && !Talo.PlayerAuth.IsRefreshing)
+                        if (errorCode == "INVALID_SESSION" && Talo.CurrentAlias != null && !uri.AbsolutePath.EndsWith("/v1/players/auth/refresh"))
                         {
                             await Talo.PlayerAuth.Refresh();
                             return await Call(uri, method, content, headers, continuity);
