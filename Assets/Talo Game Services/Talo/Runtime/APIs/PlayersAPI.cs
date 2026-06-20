@@ -208,28 +208,39 @@ namespace TaloGameServices
 
         private async Task<Player> IdentifyOffline(string service, string identifier)
         {
-            var offlineAlias = GetOfflineAlias();
+            PlayerAlias offlineAlias;
+            try
+            {
+                offlineAlias = GetOfflineAlias();
+            }
+            catch
+            {
+                DeleteOfflineAlias();
+                OnIdentificationFailed?.Invoke();
+                throw new Exception("Failed to parse offline player alias.");
+            }
+
             if (offlineAlias != null && offlineAlias.MatchesIdentifyRequest(service, identifier))
             {
                 return await HandleIdentifySuccess(offlineAlias);
             }
-            else
-            {
-                try
-                {
-                    File.Delete(offlineDataPath);
-                }
-                finally
-                {
-                    OnIdentificationFailed?.Invoke();
-                    throw new Exception("No offline player alias found.");
-                }
-            }
+
+            OnIdentificationFailed?.Invoke();
+            throw new Exception("No offline player alias found.");
+        }
+
+        public bool HasOfflineAlias()
+        {
+            return Talo.Settings.cachePlayerOnIdentify && File.Exists(offlineDataPath);
         }
 
         private PlayerAlias GetOfflineAlias()
         {
-            if (!Talo.Settings.cachePlayerOnIdentify || !File.Exists(offlineDataPath)) return null;
+            if (!HasOfflineAlias())
+            {
+                return null;
+            }
+
             return JsonUtility.FromJson<PlayerAlias>(Talo.Crypto.ReadFileContent(offlineDataPath));
         }
 
