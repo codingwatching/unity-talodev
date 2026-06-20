@@ -72,6 +72,11 @@ namespace TaloGameServices
                 return true;
             }
 
+            if (Talo.IsOffline())
+            {
+                return Talo.Players.HasOfflineAlias();
+            }
+
             if (!string.IsNullOrEmpty(GetRefreshToken()))
             {
                 try
